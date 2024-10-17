@@ -42,8 +42,8 @@ from app.utils.submit import generate_submit
 
 load_dotenv()
 
-solutions_df = pd.read_excel("data/raw/train/solutions.xlsx")
-tasks_df = pd.read_excel("data/raw/train/tasks.xlsx")
+solutions_df = pd.read_excel("data/raw/train/solutions.xlsx", engine='openpyxl')
+tasks_df = pd.read_excel("data/raw/train/tasks.xlsx", engine='openpyxl')
 
 model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
