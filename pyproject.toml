@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "hse-aiahp-baseline"
+name = "hse_hac"
 version = "0.1.0"
 description = "Baseline solution of HSE AI Assistant Hack: Python [https://www.hse.ru/ai-assistant-hack-python/]"
 authors = ["Maxim Kirilyuk <werserk@inbox.ru>"]
