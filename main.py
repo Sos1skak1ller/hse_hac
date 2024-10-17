@@ -8,8 +8,8 @@ from app.utils.submit import generate_submit
 
 load_dotenv()
 
-solutions_df = pd.read_csv("data/raw/train/solutions.csv")
-tasks_df = pd.read_csv("data/raw/train/tasks.csv")
+solutions_df = pd.read_csv("~/hse_hac/data/raw/train/solutions.csv")
+tasks_df = pd.read_csv("~/hse_hac/data/raw/train/tasks.csv")
 
 model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -42,8 +42,8 @@ def predict(row: pd.Series) -> str:
         return ""
 
 generate_submit(
-    test_solutions_path="../data/raw/test/solutions.csv",
+    test_solutions_path="~/hse_hac/data/raw/test/solutions.csv",
     predict_func=predict,
-    save_path="../data/processed/submission.csv",
+    save_path="~/hse_hac/data/processed/submission.csv",
     use_tqdm=True,
 )
