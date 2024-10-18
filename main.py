@@ -59,11 +59,7 @@ model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-model = model.half()
-model = torch.nn.DataParallel(model, device_ids=[0, 1, 2])
-model.to('cuda')
 
-# Set up the pipeline, using GPU 0 (the first available GPU in DataParallel)
 model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
 
 def get_random_records_as_text(df):
