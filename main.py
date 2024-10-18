@@ -10,8 +10,8 @@ from app.utils.submit import generate_submit
 load_dotenv()
 
 # Указываем ссылки на файлы Google Диска
-train_solutions_url = 'https://drive.google.com/file/d/ваш_file_id_для_train_solutions/view?usp=sharing'
-train_tasks_url = 'https://drive.google.com/file/d/ваш_file_id_для_train_tasks/view?usp=sharing'
+train_solutions_url = 'https://docs.google.com/file/d/1wSKxoYUbXyhVADfCn8_I3wZAcELV0nD1/edit?usp=docslist_api&filetype=msexcel'
+train_tasks_url = 'https://docs.google.com/file/d/18aIRgmu6JjmVJV1ynm8Tlo8Cn7rqogRi/edit?usp=docslist_api&filetype=msexcel'
 test_solutions_url = 'https://docs.google.com/file/d/1fAl5vjnp9nG5GmZzpvI8i6vyTOKuHpTQ/edit?usp=docslist_api&filetype=msexcel'
 
 # Указываем пути для сохранения загружаемых файлов
