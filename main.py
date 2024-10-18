@@ -4,10 +4,13 @@ from typing import List
 from dotenv import load_dotenv
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 import gdown
+import torch
 
 from app.utils.submit import generate_submit
 
 load_dotenv()
+
+torch.cuda.empty_cache()
 
 # # Указываем ссылки на файлы Google Диска
 # train_solutions_url = 'https://docs.google.com/file/d/1wSKxoYUbXyhVADfCn8_I3wZAcELV0nD1/edit?usp=docslist_api&filetype=msexcel'
@@ -39,7 +42,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # Создание пайплайна генерации текста
-model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
+# model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
 
 # def create_few_shot_context(num_examples: int = 5) -> str:
 #     # Создание контекста few-shot из случайных примеров
@@ -66,6 +69,23 @@ model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, d
 #     except Exception as e:
 #         print(f"Error while predicting: {e}")
 #         return ""
+# def simple_request_to_model(input_text: str) -> str:
+#     """
+#     Отправляет простой запрос к нейросети и возвращает ответ.
+
+#     :param input_text: Текстовый ввод, который будет отправлен в модель.
+#     :return: Ответ от модели.
+#     """
+#     try:
+#         output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
+#         return output.strip()
+#     except Exception as e:
+#         print(f"Error while sending request: {e}")
+#         return ""
+    
+# Инициализация модели и токенизатора с использованием CPU
+model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=-1)
+
 def simple_request_to_model(input_text: str) -> str:
     """
     Отправляет простой запрос к нейросети и возвращает ответ.
@@ -79,7 +99,7 @@ def simple_request_to_model(input_text: str) -> str:
     except Exception as e:
         print(f"Error while sending request: {e}")
         return ""
-    
+
 # Пример использования простого запроса
 input_text = "Вы опытный преподаватель, который обеспечивает конструктивную обратную связь. Проаналищируй вот этот код и выдй ответ discount  = float(input()) money = int(input()) print('Реализация проекта будет стоить {money} тыс. руб. без скидки. Со скидой стоимость составит {money- (money * discount)} тыс. руб.')" 
 response = simple_request_to_model(input_text)
