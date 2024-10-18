@@ -53,6 +53,8 @@ def get_random_records_as_text(df):
         fewshot+= f'{row['student_solution']} => {row['author_comment']}\n'
     return fewshot
 
+print(get_random_records_as_text(train_solutions_df))
+
 def generate_comment(role: str, fewshot: str, row: pd.Series, train_tasks: pd.DataFrame) -> str:
     task_id = row['task_id']  # Ensure 'task_id' is the correct column name
     print(f"Looking for task_id: {task_id}")
