@@ -21,14 +21,15 @@ train_solutions = urllib.request.urlopen(train_solutions_url).read()
 train_tasks = urllib.request.urlopen(train_tasks_url).read()
 test_solutions = urllib.request.urlopen(test_solutions_url).read()
 
-def download_file(url: str, save_path: str):
-    response = urllib.request.urlopen(url)
-    with open(save_path, "wb") as f:
-        f.write(response.read())
-
-download_file(train_solutions_url, "../data/raw/train/train_solutions.xlsx")
-download_file(train_tasks_url, "../data/raw/train/train_tasks.xlsx")
-download_file(test_solutions_url, "../data/raw/test/test_solutions.xlsx")
+f = open("../data/raw/train/train_solutions.xlsx", "wb") #свои пути пишем там угу
+f.write(train_solutions)
+f.close()
+f = open("../data/raw/train/train_tasks.xlsx", "wb") #свои пути пишем там угу
+f.write(train_tasks)
+f.close()
+f = open("../data/raw/test/test_solutions.xlsx", "wb") #свои пути пишем там угу
+f.write(test_solutions)
+f.close()
 
 train_solutions_df = pd.read_excel("../data/raw/train/train_solutions.xlsx")
 train_tasks_df = pd.read_excel("../data/raw/train/train_tasks.xlsx")
