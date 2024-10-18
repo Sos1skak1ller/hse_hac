@@ -13,27 +13,47 @@ load_dotenv()
 
 torch.cuda.empty_cache()
 
+# train_solutions_url = 'https://drive.usercontent.google.com/u/0/uc?id=1wSKxoYUbXyhVADfCn8_I3wZAcELV0nD1&export=download'
+# train_tasks_url = 'https://drive.usercontent.google.com/u/0/uc?id=18aIRgmu6JjmVJV1ynm8Tlo8Cn7rqogRi&export=download'
+# test_solutions_url = 'https://drive.usercontent.google.com/u/0/uc?id=1fAl5vjnp9nG5GmZzpvI8i6vyTOKuHpTQ&export=download'
+
+# train_solutions = urllib.request.urlopen(train_solutions_url).read()
+# train_tasks = urllib.request.urlopen(train_tasks_url).read()
+# test_solutions = urllib.request.urlopen(test_solutions_url).read()
+
+# f = open("../data/raw/train/train_solutions.xlsx", "wb") #свои пути пишем там угу
+# f.write(train_solutions)
+# f.close()
+# f = open("../data/raw/train/train_tasks.xlsx", "wb") #свои пути пишем там угу
+# f.write(train_tasks)
+# f.close()
+# f = open("../data/raw/test/test_solutions.xlsx", "wb") #свои пути пишем там угу
+# f.write(test_solutions)
+# f.close()
+
+# train_solutions_df = pd.read_excel("../data/raw/train/train_solutions.xlsx")
+# train_tasks_df = pd.read_excel("../data/raw/train/train_tasks.xlsx")
+# test_solutions_df = pd.read_excel("../data/raw/test/test_solutions.xlsx")
+
 train_solutions_url = 'https://drive.usercontent.google.com/u/0/uc?id=1wSKxoYUbXyhVADfCn8_I3wZAcELV0nD1&export=download'
 train_tasks_url = 'https://drive.usercontent.google.com/u/0/uc?id=18aIRgmu6JjmVJV1ynm8Tlo8Cn7rqogRi&export=download'
 test_solutions_url = 'https://drive.usercontent.google.com/u/0/uc?id=1fAl5vjnp9nG5GmZzpvI8i6vyTOKuHpTQ&export=download'
-
 train_solutions = urllib.request.urlopen(train_solutions_url).read()
 train_tasks = urllib.request.urlopen(train_tasks_url).read()
 test_solutions = urllib.request.urlopen(test_solutions_url).read()
-
-f = open("../data/raw/train/train_solutions.xlsx", "wb") #свои пути пишем там угу
+f = open("train_solutions.xlsx", "wb") #свои пути пишем там угу
 f.write(train_solutions)
 f.close()
-f = open("../data/raw/train/train_tasks.xlsx", "wb") #свои пути пишем там угу
+f = open("train_tasks.xlsx", "wb") #свои пути пишем там угу
 f.write(train_tasks)
 f.close()
-f = open("../data/raw/test/test_solutions.xlsx", "wb") #свои пути пишем там угу
+f = open("test_solutions.xlsx", "wb") #свои пути пишем там угу
 f.write(test_solutions)
 f.close()
 
-train_solutions_df = pd.read_excel("../data/raw/train/train_solutions.xlsx")
-train_tasks_df = pd.read_excel("../data/raw/train/train_tasks.xlsx")
-test_solutions_df = pd.read_excel("../data/raw/test/test_solutions.xlsx")
+train_solutions_df = pd.read_excel("train_solutions.xlsx")
+train_tasks_df = pd.read_excel("train_tasks.xlsx")
+test_solutions_df = pd.read_excel("test_solutions.xlsx")
 
 model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
