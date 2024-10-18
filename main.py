@@ -21,15 +21,14 @@ train_solutions = urllib.request.urlopen(train_solutions_url).read()
 train_tasks = urllib.request.urlopen(train_tasks_url).read()
 test_solutions = urllib.request.urlopen(test_solutions_url).read()
 
-f = open("../data/raw/train/train_solutions.xlsx", "wb") #свои пути пишем там угу
-f.write(train_solutions)
-f.close()
-f = open("../data/raw/train/train_tasks.xlsx", "wb") #свои пути пишем там угу
-f.write(train_tasks)
-f.close()
-f = open("../data/raw/test/test_solutions.xlsx", "wb") #свои пути пишем там угу
-f.write(test_solutions)
-f.close()
+def download_file(url: str, save_path: str):
+    response = urllib.request.urlopen(url)
+    with open(save_path, "wb") as f:
+        f.write(response.read())
+
+download_file(train_solutions_url, "../data/raw/train/train_solutions.xlsx")
+download_file(train_tasks_url, "../data/raw/train/train_tasks.xlsx")
+download_file(test_solutions_url, "../data/raw/test/test_solutions.xlsx")
 
 train_solutions_df = pd.read_excel("../data/raw/train/train_solutions.xlsx")
 train_tasks_df = pd.read_excel("../data/raw/train/train_tasks.xlsx")
@@ -54,15 +53,13 @@ def get_random_records_as_text(df):
     return fewshot
 
 print(get_random_records_as_text(train_solutions_df))
+
 def generate_comment(role: str, fewshot: str, row: pd.Series) -> str:
-
-    student_solution = row['student_solution']   # Убедитесь, что 'student_solution' существует в row
-
-    # Формируем текст запроса
+    student_solution = row['student_solution']
     input_text = f"{role}\n{fewshot}\n\n Student's solution:\n{student_solution}\nTeacher's comment:"
     
     try:
-        output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
+        output = model_pipeline(input_text, max_length=2000, num_return_sequences=1)[0]["generated_text"]
         generated_comment = output.split("Teacher's comment:")[-1].strip()
         return generated_comment
     except Exception as e:
@@ -71,32 +68,11 @@ def generate_comment(role: str, fewshot: str, row: pd.Series) -> str:
 
 role = "Вы опытный преподаватель, который обеспечивает конструктивную обратную связь."
 fewshot_examples = get_random_records_as_text(train_solutions_df)
-example_row = test_solutions_df.sample(n=1).iloc[0]  # Получаем одну случайную строку из датафрейма
 
-generated_comment = generate_comment(role, fewshot_examples, example_row)  # Теперь не передаем train_tasks_df
-
-# def simple_request_to_model(input_text: str) -> str:
-#     """
-#     Отправляет простой запрос к нейросети и возвращает ответ.
-
-#     :param input_text: Текстовый ввод, который будет отправлен в модель.
-#     :return: Ответ от модели.
-#     """
-#     try:
-#         output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
-#         return output.strip()
-#     except Exception as e:
-#         print(f"Error while sending request: {e}")
-#         return ""
-
-# response = simple_request_to_model(generated_comment)
-print("Response from the model:", generated_comment)
-
-
-# # Вызываем функцию generate_submit для генерации сабмита
-# generate_submit(
-#     test_solutions_path='../data/raw/test/test_solutions.xlsx',
-#     predict_func=lambda row: generate_comment(role, fewshot_examples, row),  # Updated to use the correct parameters
-#     save_path="../data/processed/submission.csv",
-#     use_tqdm=True,
-# )
+# Generate submission file
+generate_submit(
+    test_solutions_path='../data/raw/test/test_solutions.xlsx',
+    predict_func=lambda row: generate_comment(role, fewshot_examples, row),
+    save_path="../data/processed/submission.csv",
+    use_tqdm=True,
+)
