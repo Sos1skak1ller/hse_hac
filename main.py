@@ -10,14 +10,19 @@ from app.utils.submit import generate_submit
 load_dotenv()
 
 # Указываем ссылки на файлы Google Диска
-train_solutions_url = 'https://docs.google.com/file/d/1wSKxoYUbXyhVADfCn8_I3wZAcELV0nD1/edit?usp=docslist_api&filetype=msexcel'
-train_tasks_url = 'https://docs.google.com/file/d/18aIRgmu6JjmVJV1ynm8Tlo8Cn7rqogRi/edit?usp=docslist_api&filetype=msexcel'
+train_solutions_url = 'https://drive.google.com/file/d/ваш_file_id_для_train_solutions/view?usp=sharing'
+train_tasks_url = 'https://drive.google.com/file/d/ваш_file_id_для_train_tasks/view?usp=sharing'
 test_solutions_url = 'https://docs.google.com/file/d/1fAl5vjnp9nG5GmZzpvI8i6vyTOKuHpTQ/edit?usp=docslist_api&filetype=msexcel'
 
 # Указываем пути для сохранения загружаемых файлов
 train_solutions_path = "../data/raw/train/solutions.xlsx"
 train_tasks_path = "../data/raw/train/tasks.xlsx"
 test_solutions_path = "../data/raw/test/solutions.xlsx"
+
+# Создаем директории, если они не существуют
+os.makedirs(os.path.dirname(train_solutions_path), exist_ok=True)
+os.makedirs(os.path.dirname(train_tasks_path), exist_ok=True)
+os.makedirs(os.path.dirname(test_solutions_path), exist_ok=True)
 
 # Скачиваем файлы с Google Диска
 gdown.download(train_solutions_url, train_solutions_path, quiet=False)
@@ -62,8 +67,10 @@ def predict(row: pd.Series, prompt: str) -> str:
         print(f"Error while predicting: {e}")
         return ""
 
+# Устанавливаем пользовательский промпт
 custom_prompt = "Вы опытный преподаватель, который обеспечивает конструктивную обратную связь."
 
+# Вызываем функцию generate_submit для генерации сабмита
 generate_submit(
     test_solutions_path=test_solutions_path,
     predict_func=lambda row: predict(row, custom_prompt),
