@@ -1,39 +1,4 @@
-# Baseline of AI Assistant Hack: Python
-
-По вопросам/багам писать в tg: [@werserk](https://t.me/werserk)
-
-## Ссылки
-
-Репозиторий: https://github.com/werserk/hse-aiahp-baseline \
-Тестирующая система: https://dsworks.ru/champ/hse-2024-october \
-Лендинг: https://www.hse.ru/ai-assistant-hack-python/
-
 ## Описание
-
-### YandexGPT
-В бейзлайне использована модель YandexGPT. 
-Если вы хотите использовать её, то вам потребуется получить [микро-грант](https://yandex.cloud/ru/docs/billing/concepts/bonus-account), чтобы не тратить свои кровные на её инференс (там просто нужно создать новый акк и сделать его "платёжным").
-
-**Совет:** сначала тестируйте свои гипотезы на небольшом сабсете данных (например, 15-20% от всех тестовых данных),
-а уже после выбора наилучшего варианта генерируйте полный сабмит. 
-Так сможете потратить квоту более эффективно.
-
-Как получить IAM Token и Folder ID можно посмотреть в [документации](https://yandex.cloud/en-ru/docs/foundation-models/quickstart/yandexgpt#api_2) Yandex Cloud.
-
-### GigaChat
-Так же у Сберовского GigaChat API есть пробный тариф - Freemium. Он тоже даст вам достаточно ресурсов.
-
-### Локальный модели
-Ну и, конечно, пробуйте запускать модели локально с [HuggingFace](https://huggingface.co/models?pipeline_tag=text-generation&sort=trending) или других мест.
-
-Вы можете ознакомиться с топовыми LLM моделями здесь - [LMSYS Chatbot Arena](https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard).
-
-В ветке "new_models" вы можете увидеть пару моделей, которые мы попробовали, но не стали включать в финальный бейзлайн. Возможно они натолкнут вас на умные мысли.
-
-### Другие подходы
-Пусть мы и сделали акцент на LLM аналогичные ChatGPT, это не значит, что вы не можете использовать другие LLM модели.
-
-Будет круто, если вам пригодятся данные "train" не только для анализа.
 
 ## Запуск
 
@@ -41,16 +6,9 @@
 
 ```bash
 poetry install
+pip install gdown
 ```
 
-### Переменные окружения
-
-Создали для вас .env.example файл в корне проекта. \
-Чтобы создать .env файл, запускаем следующую команду:
-
-```bash
-cp .env.example .env
-```
 
 ## Структура проекта
 
