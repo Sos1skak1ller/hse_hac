@@ -54,22 +54,20 @@ def get_random_records_as_text(df):
     return fewshot
 
 def generate_comment(role: str, fewshot: str, row: pd.Series, train_tasks: pd.DataFrame) -> str:
-    """
-    Генерирует комментарий на основе роли, few-shot примеров и данных из строки датафрейма.
+    task_id = row['task_id']  # Ensure 'task_id' is the correct column name
+    print(f"Looking for task_id: {task_id}")
 
-    :param role: Роль, которую будет выполнять модель.
-    :param fewshot: Few-shot примеры для обучения модели.
-    :param row: Строка из датафрейма с данными для анализа.
-    :param train_tasks: Датафрейм с задачами для сопоставления с id.
-    :return: Сгенерированный комментарий от модели.
-    """
-    # Получаем id задачи из строки row
-    task_id = row['task_id']  # Замените 'task_id' на название столбца с id задачи в test_solutions_df
+    # Find the corresponding task
+    matching_tasks = train_tasks.loc[train_tasks['id'] == task_id]
+    print(f"Number of matching tasks found: {len(matching_tasks)}")
 
-    # Находим соответствующую задачу в train_tasks
-    row_task = train_tasks.loc[train_tasks['id'] == task_id].iloc[0]  # Замените 'id' на название столбца с id задачи в train_tasks
+    if matching_tasks.empty:
+        print(f"No matching task found for task_id: {task_id}")
+        return "No matching task found."
 
-    # Формируем текст запроса
+    row_task = matching_tasks.iloc[0]  # Safely get the first match
+
+    # Generate the comment as before
     input_text = f"{role}\n{fewshot}\n\nTask: {row_task['task_description']}\nStudent's solution:\n{row['student_solution']}\nTeacher's comment:"
     
     try:
