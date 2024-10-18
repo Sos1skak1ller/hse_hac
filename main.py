@@ -53,18 +53,24 @@ def get_random_records_as_text(df):
         fewshot+= f'{row['student_solution']} => {row['author_comment']}\n'
     return fewshot
 
-
-def generate_comment(role: str, fewshot: str, row: pd.Series) -> str:
+def generate_comment(role: str, fewshot: str, row: pd.Series, train_tasks: pd.DataFrame) -> str:
     """
     Генерирует комментарий на основе роли, few-shot примеров и данных из строки датафрейма.
 
     :param role: Роль, которую будет выполнять модель.
     :param fewshot: Few-shot примеры для обучения модели.
     :param row: Строка из датафрейма с данными для анализа.
+    :param train_tasks: Датафрейм с задачами для сопоставления с id.
     :return: Сгенерированный комментарий от модели.
     """
+    # Получаем id задачи из строки row
+    task_id = row['task_id']  # Замените 'task_id' на название столбца с id задачи в test_solutions_df
+
+    # Находим соответствующую задачу в train_tasks
+    row_task = train_tasks.loc[train_tasks['id'] == task_id].iloc[0]  # Замените 'id' на название столбца с id задачи в train_tasks
+
     # Формируем текст запроса
-    input_text = f"{role}\n{fewshot}\n\nTask: {row['task_description']}\nStudent's solution:\n{row['student_solution']}\nTeacher's comment:"
+    input_text = f"{role}\n{fewshot}\n\nTask: {row_task['task_description']}\nStudent's solution:\n{row['student_solution']}\nTeacher's comment:"
     
     try:
         output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
@@ -78,7 +84,7 @@ role = "Вы опытный преподаватель, который обес�
 fewshot_examples = get_random_records_as_text(train_solutions_df)
 example_row = test_solutions_df.sample(n=1).iloc[0]  # Получаем одну случайную строку из датафрейма
 
-generated_comment = generate_comment(role, fewshot_examples, example_row)
+generated_comment = generate_comment(role, fewshot_examples, example_row, train_tasks_df)  # Обновлено: передаем train_tasks_df
 
 # def simple_request_to_model(input_text: str) -> str:
 #     """
