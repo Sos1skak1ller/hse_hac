@@ -88,7 +88,7 @@ fewshot_examples = get_random_records_as_text(train_solutions_df)
 
 generate_submit(
     test_solutions_path='test_solutions.xlsx',
-    predict_func=lambda row: generate_comment(role, fewshot_examples, row),
+    predict_func=lambda row: generate_comment(role, fewshot_examples, row, protection1, protection2),
     save_path="../data/processed/submission.csv",
     use_tqdm=True,
 )
