@@ -42,7 +42,7 @@ model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Инициализация модели и токенизатора с использованием CPU
+# # Инициализация модели и токенизатора с использованием CPU
 model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=-1)
 
 def get_random_records_as_text(df):
@@ -80,22 +80,22 @@ example_row = test_solutions_df.sample(n=1).iloc[0]  # Получаем одну
 
 generated_comment = generate_comment(role, fewshot_examples, example_row)
 
-def simple_request_to_model(input_text: str) -> str:
-    """
-    Отправляет простой запрос к нейросети и возвращает ответ.
+# def simple_request_to_model(input_text: str) -> str:
+#     """
+#     Отправляет простой запрос к нейросети и возвращает ответ.
 
-    :param input_text: Текстовый ввод, который будет отправлен в модель.
-    :return: Ответ от модели.
-    """
-    try:
-        output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
-        return output.strip()
-    except Exception as e:
-        print(f"Error while sending request: {e}")
-        return ""
+#     :param input_text: Текстовый ввод, который будет отправлен в модель.
+#     :return: Ответ от модели.
+#     """
+#     try:
+#         output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
+#         return output.strip()
+#     except Exception as e:
+#         print(f"Error while sending request: {e}")
+#         return ""
 
-response = simple_request_to_model(generated_comment)
-print("Response from the model:", response)
+# response = simple_request_to_model(generated_comment)
+print("Response from the model:", generated_comment)
 
 
 # # Вызываем функцию generate_submit для генерации сабмита
