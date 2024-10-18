@@ -3,21 +3,41 @@ import pandas as pd
 from typing import List
 from dotenv import load_dotenv
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
+import gdown
 
 from app.utils.submit import generate_submit
 
 load_dotenv()
 
-solutions_df = pd.read_excel("../data/raw/train/solutions.xlsx")
-tasks_df = pd.read_excel("../data/raw/train/tasks.xlsx")
+# Указываем ссылки на файлы Google Диска
+train_solutions_url = 'https://docs.google.com/file/d/1wSKxoYUbXyhVADfCn8_I3wZAcELV0nD1/edit?usp=docslist_api&filetype=msexcel'
+train_tasks_url = 'https://docs.google.com/file/d/18aIRgmu6JjmVJV1ynm8Tlo8Cn7rqogRi/edit?usp=docslist_api&filetype=msexcel'
+test_solutions_url = 'https://docs.google.com/file/d/1fAl5vjnp9nG5GmZzpvI8i6vyTOKuHpTQ/edit?usp=docslist_api&filetype=msexcel'
 
+# Указываем пути для сохранения загружаемых файлов
+train_solutions_path = "../data/raw/train/solutions.xlsx"
+train_tasks_path = "../data/raw/train/tasks.xlsx"
+test_solutions_path = "../data/raw/test/solutions.xlsx"
+
+# Скачиваем файлы с Google Диска
+gdown.download(train_solutions_url, train_solutions_path, quiet=False)
+gdown.download(train_tasks_url, train_tasks_path, quiet=False)
+gdown.download(test_solutions_url, test_solutions_path, quiet=False)
+
+# Загружаем данные
+solutions_df = pd.read_excel(train_solutions_path)
+tasks_df = pd.read_excel(train_tasks_path)
+
+# Инициализация модели и токенизатора
 model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
+# Создание пайплайна генерации текста
 model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
 
 def create_few_shot_context(num_examples: int = 5) -> str:
+    # Создание контекста few-shot из случайных примеров
     examples = []
     for _, row in solutions_df.sample(n=num_examples).iterrows():
         task_id = row["task_id"]
@@ -28,9 +48,11 @@ def create_few_shot_context(num_examples: int = 5) -> str:
         examples.append(example)
     return "\n\n".join(examples)
 
+# Генерация контекста few-shot
 few_shot_context = create_few_shot_context()
 
 def predict(row: pd.Series, prompt: str) -> str:
+    # Используем переданный промпт перед основным текстом запроса
     input_text = f"{prompt}\n\nTask: {row['task_description']}\nStudent's solution:\n{row['student_solution']}\nTeacher's comment:"
     try:
         output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
@@ -43,7 +65,7 @@ def predict(row: pd.Series, prompt: str) -> str:
 custom_prompt = "Вы опытный преподаватель, который обеспечивает конструктивную обратную связь."
 
 generate_submit(
-    test_solutions_path="../data/raw/test/solutions.xlsx",
+    test_solutions_path=test_solutions_path,
     predict_func=lambda row: predict(row, custom_prompt),
     save_path="../data/processed/submission.csv",
     use_tqdm=True,
