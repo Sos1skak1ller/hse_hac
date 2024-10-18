@@ -54,23 +54,12 @@ def get_random_records_as_text(df):
     return fewshot
 
 print(get_random_records_as_text(train_solutions_df))
+def generate_comment(role: str, fewshot: str, row: pd.Series) -> str:
 
-def generate_comment(role: str, fewshot: str, row: pd.Series, train_tasks: pd.DataFrame) -> str:
-    task_id = row['task_id']  # Ensure 'task_id' is the correct column name
-    print(f"Looking for task_id: {task_id}")
+    student_solution = row['student_solution']   # Убедитесь, что 'student_solution' существует в row
 
-    # Find the corresponding task
-    matching_tasks = train_tasks.loc[train_tasks['id'] == task_id]
-    print(f"Number of matching tasks found: {len(matching_tasks)}")
-
-    if matching_tasks.empty:
-        print(f"No matching task found for task_id: {task_id}")
-        return "No matching task found."
-
-    row_task = matching_tasks.iloc[0]  # Safely get the first match
-
-    # Generate the comment as before
-    input_text = f"{role}\n{fewshot}\n\nTask: {row_task['task_description']}\nStudent's solution:\n{row['student_solution']}\nTeacher's comment:"
+    # Формируем текст запроса
+    input_text = f"{role}\n{fewshot}\n\n Student's solution:\n{student_solution}\nTeacher's comment:"
     
     try:
         output = model_pipeline(input_text, max_length=200, num_return_sequences=1)[0]["generated_text"]
@@ -84,7 +73,7 @@ role = "Вы опытный преподаватель, который обес�
 fewshot_examples = get_random_records_as_text(train_solutions_df)
 example_row = test_solutions_df.sample(n=1).iloc[0]  # Получаем одну случайную строку из датафрейма
 
-generated_comment = generate_comment(role, fewshot_examples, example_row, train_tasks_df)  # Обновлено: передаем train_tasks_df
+generated_comment = generate_comment(role, fewshot_examples, example_row)  # Теперь не передаем train_tasks_df
 
 # def simple_request_to_model(input_text: str) -> str:
 #     """
