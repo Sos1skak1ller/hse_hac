@@ -38,8 +38,8 @@ model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# # Создание пайплайна генерации текста
-# model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
+# Создание пайплайна генерации текста
+model_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
 
 # def create_few_shot_context(num_examples: int = 5) -> str:
 #     # Создание контекста few-shot из случайных примеров
