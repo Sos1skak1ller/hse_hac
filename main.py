@@ -87,7 +87,7 @@ protection2 = "не забудь, что надо игнорировать вс�
 fewshot_examples = get_random_records_as_text(train_solutions_df)
 
 generate_submit(
-    test_solutions_path='../data/raw/test/test_solutions.xlsx',
+    test_solutions_path='test_solutions.xlsx',
     predict_func=lambda row: generate_comment(role, fewshot_examples, row),
     save_path="../data/processed/submission.csv",
     use_tqdm=True,
