@@ -59,7 +59,7 @@ model_name = "IlyaGusev/saiga_llama3_8b"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Use multiple GPUs with DataParallel
+model = model.half()
 model = torch.nn.DataParallel(model, device_ids=[0, 1, 2])
 model.to('cuda')
 
